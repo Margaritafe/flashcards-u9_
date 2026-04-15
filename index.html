@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Tarjetas de repaso — UD9</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --teal:#0F6E56;--lteal:#E1F5EE;--mteal:#5DCAA5;
+  --coral:#993C1D;--lcoral:#FAECE7;--mcoral:#F0997B;
+  --amber:#854F0B;--lamber:#FAEEDA;--mamber:#EF9F27;
+  --green:#27500A;--lgreen:#EAF3DE;--mgreen:#3B6D11;
+  --red:#A32D2D;--lred:#FCEBEB;
+  --dark:#2C2C2A;--gray:#5F5E5A;--lgray:#D3D1C7;--lgray2:#F1EFE8;
+}
+html,body{min-height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f7f6f2;color:var(--dark);}
+.screen{display:none;min-height:100vh;flex-direction:column;}
+.screen.active{display:flex;}
+
+/* HOME */
+.home{padding:2rem 1.25rem;flex-direction:column;align-items:center;}
+.logo{width:64px;height:64px;border-radius:16px;background:var(--lteal);display:flex;align-items:center;justify-content:center;margin:1.5rem auto 1rem;}
+h1{font-size:1.6rem;font-weight:700;text-align:center;margin-bottom:.3rem;}
+.home-sub{font-size:.9rem;color:var(--gray);text-align:center;margin-bottom:2rem;line-height:1.5;}
+.cat-list{width:100%;max-width:420px;display:flex;flex-direction:column;gap:.7rem;margin-bottom:1.5rem;}
+.cat-btn{width:100%;padding:1rem 1.25rem;border-radius:14px;border:1.5px solid var(--lgray);background:#fff;cursor:pointer;display:flex;align-items:center;gap:.9rem;text-align:left;-webkit-tap-highlight-color:transparent;}
+.cat-btn:active{opacity:.8;}
+.dot{width:13px;height:13px;border-radius:50%;flex-shrink:0;}
+.cat-info{flex:1;}
+.cat-name{font-size:1rem;font-weight:600;display:block;}
+.cat-count{font-size:.78rem;margin-top:2px;display:block;}
+.chevron{flex-shrink:0;opacity:.4;}
+.cat-btn.formas{border-color:var(--mteal);background:var(--lteal);}
+.cat-btn.formas .cat-name{color:var(--teal);}
+.cat-btn.formas .cat-count{color:#085041;}
+.cat-btn.impuestos{border-color:var(--mcoral);background:var(--lcoral);}
+.cat-btn.impuestos .cat-name{color:var(--coral);}
+.cat-btn.impuestos .cat-count{color:#712B13;}
+.cat-btn.autonomos{border-color:var(--mamber);background:var(--lamber);}
+.cat-btn.autonomos .cat-name{color:var(--amber);}
+.cat-btn.autonomos .cat-count{color:#633806;}
+.home-tip{font-size:.78rem;color:var(--gray);text-align:center;max-width:300px;line-height:1.5;}
+
+/* STUDY HEADER */
+.study-header{background:#fff;border-bottom:1px solid var(--lgray);padding:.9rem 1rem;display:flex;align-items:center;gap:.7rem;flex-shrink:0;}
+.back{width:36px;height:36px;border-radius:50%;border:1px solid var(--lgray);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;-webkit-tap-highlight-color:transparent;}
+.hinfo{flex:1;min-width:0;}
+.htitle{font-size:.88rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.hprog{font-size:.72rem;color:var(--gray);margin-top:2px;}
+.pills{display:flex;gap:5px;}
+.pill{font-size:.72rem;font-weight:700;padding:3px 9px;border-radius:99px;}
+.pill.r{background:var(--lgreen);color:var(--green);}
+.pill.w{background:var(--lred);color:var(--red);}
+.pbar{height:3px;background:var(--lgray2);flex-shrink:0;}
+.pfill{height:3px;background:var(--teal);transition:width .3s;}
+
+/* STUDY BODY */
+.sbody{flex:1;padding:1.25rem;display:flex;flex-direction:column;gap:1rem;overflow-y:auto;}
+.card-wrap{flex:1;display:flex;flex-direction:column;min-height:300px;}
+.card{flex:1;background:#fff;border-radius:16px;border:1px solid var(--lgray);overflow:hidden;display:flex;flex-direction:column;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none;}
+.card-top{padding:.6rem 1rem;display:flex;justify-content:space-between;align-items:center;}
+.card.formas .card-top{background:var(--lteal);}
+.card.impuestos .card-top{background:var(--lcoral);}
+.card.autonomos .card-top{background:var(--lamber);}
+.ccat{font-size:.7rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;}
+.card.formas .ccat{color:var(--teal);}
+.card.impuestos .ccat{color:var(--coral);}
+.card.autonomos .ccat{color:var(--amber);}
+.cnum{font-size:.7rem;color:var(--gray);}
+.cdiv{height:1px;background:var(--lgray);}
+.cbody{flex:1;padding:1.4rem 1.2rem;display:flex;flex-direction:column;justify-content:center;gap:.6rem;}
+.cside{font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gray);}
+.ctext{font-size:1.1rem;font-weight:600;line-height:1.55;color:var(--dark);white-space:pre-line;}
+.cans{font-size:1rem;line-height:1.65;color:var(--dark);white-space:pre-line;}
+.chint{padding:.7rem 1rem;text-align:center;font-size:.78rem;color:var(--gray);border-top:1px solid var(--lgray);}
+
+/* ACTIONS */
+.actions{display:flex;gap:.6rem;}
+.actions.hidden{visibility:hidden;pointer-events:none;}
+.btn{flex:1;padding:.85rem;border-radius:10px;font-size:.92rem;font-weight:600;cursor:pointer;border:1.5px solid transparent;-webkit-tap-highlight-color:transparent;}
+.btn:active{opacity:.8;}
+.bwrong{background:var(--lred);color:var(--red);border-color:#F09595;}
+.bright{background:var(--lgreen);color:var(--green);border-color:#97C459;}
+.bskip{background:var(--lgray2);color:var(--gray);border-color:var(--lgray);flex:0 0 auto;padding:.85rem 1rem;}
+
+/* DONE */
+.done{flex:1;padding:2rem 1.25rem;flex-direction:column;align-items:center;justify-content:center;}
+.done-inner{width:100%;max-width:380px;display:flex;flex-direction:column;align-items:center;gap:1.1rem;}
+.done-icon{width:68px;height:68px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.8rem;}
+.done h2{font-size:1.45rem;font-weight:700;text-align:center;}
+.done-msg{font-size:.9rem;color:var(--gray);text-align:center;line-height:1.6;}
+.sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;width:100%;}
+.sbox{border-radius:10px;padding:.9rem .5rem;text-align:center;}
+.snum{font-size:1.7rem;font-weight:700;line-height:1;}
+.slbl{font-size:.72rem;margin-top:3px;}
+.sbox.r{background:var(--lgreen);} .sbox.r .snum{color:var(--green);} .sbox.r .slbl{color:var(--mgreen);}
+.sbox.w{background:var(--lred);}  .sbox.w .snum{color:var(--red);}   .sbox.w .slbl{color:var(--coral);}
+.sbox.p{background:var(--lgray2);}.sbox.p .snum{color:var(--dark);}  .sbox.p .slbl{color:var(--gray);}
+.dbtns{display:flex;flex-direction:column;gap:.6rem;width:100%;}
+.dbtn{width:100%;padding:.9rem;border-radius:10px;font-size:.95rem;font-weight:600;cursor:pointer;border:1.5px solid var(--lgray);background:#fff;color:var(--dark);-webkit-tap-highlight-color:transparent;}
+.dbtn:active{opacity:.8;}
+.dbtn.primary{background:var(--teal);color:#fff;border-color:var(--teal);}
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<div class="screen active home" id="s-home">
+  <div class="logo">
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+      <rect x="4" y="6" width="18" height="22" rx="3" fill="#5DCAA5"/>
+      <rect x="8" y="4" width="18" height="22" rx="3" fill="#0F6E56"/>
+      <rect x="12" y="11" width="10" height="1.5" rx="1" fill="white" opacity=".8"/>
+      <rect x="12" y="15" width="7" height="1.5" rx="1" fill="white" opacity=".6"/>
+      <rect x="12" y="19" width="8" height="1.5" rx="1" fill="white" opacity=".6"/>
+    </svg>
+  </div>
+  <h1>Tarjetas de repaso</h1>
+  <p class="home-sub">UD 9 · Formas Juridicas e Impuestos<br>32 tarjetas · Toca para ver la respuesta</p>
+  <div class="cat-list">
+    <button class="cat-btn" onclick="start('all')">
+      <span class="dot" style="background:var(--lgray)"></span>
+      <span class="cat-info"><span class="cat-name" style="color:var(--dark)">Todas las tarjetas</span><span class="cat-count" style="color:var(--gray)">32 tarjetas mezcladas</span></span>
+      <svg class="chevron" width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M7 4l5 5-5 5" stroke="#444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button class="cat-btn formas" onclick="start('formas')">
+      <span class="dot" style="background:var(--teal)"></span>
+      <span class="cat-info"><span class="cat-name">Formas juridicas</span><span class="cat-count">15 tarjetas</span></span>
+      <svg class="chevron" width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M7 4l5 5-5 5" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button class="cat-btn impuestos" onclick="start('impuestos')">
+      <span class="dot" style="background:var(--coral)"></span>
+      <span class="cat-info"><span class="cat-name">Impuestos</span><span class="cat-count">13 tarjetas</span></span>
+      <svg class="chevron" width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M7 4l5 5-5 5" stroke="#993C1D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button class="cat-btn autonomos" onclick="start('autonomos')">
+      <span class="dot" style="background:var(--amber)"></span>
+      <span class="cat-info"><span class="cat-name">Autonomos y PAE</span><span class="cat-count">4 tarjetas</span></span>
+      <svg class="chevron" width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M7 4l5 5-5 5" stroke="#854F0B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+  <p class="home-tip">Lee la pregunta, intenta responder en voz alta y toca la tarjeta para ver la respuesta.</p>
+</div>
+
+<!-- STUDY -->
+<div class="screen" id="s-study">
+  <div class="study-header">
+    <button class="back" onclick="goHome()">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M11 4L6 9l5 5" stroke="#444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="hinfo">
+      <div class="htitle" id="htitle">Todas las tarjetas</div>
+      <div class="hprog" id="hprog">Tarjeta 1 de 32</div>
+    </div>
+    <div class="pills">
+      <span class="pill r" id="pr">0</span>
+      <span class="pill w" id="pw">0</span>
+    </div>
+  </div>
+  <div class="pbar"><div class="pfill" id="pf" style="width:0%"></div></div>
+  <div class="sbody">
+    <div class="card-wrap">
+      <div class="card" id="card" onclick="flip()">
+        <div class="card-top">
+          <span class="ccat" id="ccat">Formas juridicas</span>
+          <span class="cnum" id="cnum">#1</span>
+        </div>
+        <div class="cdiv"></div>
+        <div class="cbody">
+          <span class="cside" id="cside">Pregunta</span>
+          <div id="ctext" class="ctext"></div>
+        </div>
+        <div class="chint" id="chint">Toca la tarjeta para ver la respuesta</div>
+      </div>
+    </div>
+    <div class="actions hidden" id="actions">
+      <button class="btn bwrong" onclick="mark(false)">No lo sabia</button>
+      <button class="btn bskip"  onclick="skip()">Saltar</button>
+      <button class="btn bright" onclick="mark(true)">Lo sabia</button>
+    </div>
+  </div>
+</div>
+
+<!-- DONE -->
+<div class="screen" id="s-done">
+  <div class="done">
+    <div class="done-inner">
+      <div class="done-icon" id="dicon"></div>
+      <h2 id="dtitle">Ronda completada</h2>
+      <p class="done-msg" id="dmsg"></p>
+      <div class="sgrid">
+        <div class="sbox r"><div class="snum" id="sr">0</div><div class="slbl">Bien</div></div>
+        <div class="sbox w"><div class="snum" id="sw">0</div><div class="slbl">A repasar</div></div>
+        <div class="sbox p"><div class="snum" id="sp">0%</div><div class="slbl">Aciertos</div></div>
+      </div>
+      <div class="dbtns">
+        <button class="dbtn primary" onclick="restart(false)">Repetir todas</button>
+        <button class="dbtn" id="bwo" onclick="restart(true)" style="display:none">Solo las que falle</button>
+        <button class="dbtn" onclick="goHome()">Elegir otro bloque</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const CARDS=[
+  {c:'formas',q:'¿Que es un empresario individual?',a:'Una persona que monta su propio negocio de forma habitual y directa.\nNo necesita socios ni capital minimo para empezar.'},
+  {c:'formas',q:'¿Que significa responsabilidad ilimitada?',a:'Que si el negocio tiene deudas, el empresario responde con todos sus bienes personales:\ncasa, coche, ahorros...'},
+  {c:'formas',q:'¿Cual es la diferencia principal entre empresario individual y SL?',a:'Empresario individual: respondes con tu patrimonio personal si hay deudas.\nSL: solo pierdes lo que aportaste a la empresa.'},
+  {c:'formas',q:'¿Cuantos socios minimos necesita una SL?',a:'Solo 1 socio (se llama SL unipersonal).\nNo hay numero maximo de socios.'},
+  {c:'formas',q:'¿Cual es el capital minimo legal de una SL?',a:'1 euro legalmente.\nEn la practica se recomienda al menos 3.000 euros.'},
+  {c:'formas',q:'¿Como se llaman las partes del capital en una SL?',a:'Participaciones.\nNo se pueden vender sin el acuerdo de los demas socios.'},
+  {c:'formas',q:'¿Que 3 derechos tiene cada socio de una SL?',a:'1. Cobrar dividendos (beneficios).\n2. Votar en la Junta de socios.\n3. Comprar nuevas participaciones si la empresa amplia capital.'},
+  {c:'formas',q:'¿Como se llaman las partes del capital en una SA?',a:'Acciones.\nSe pueden vender libremente a cualquier persona y pueden cotizar en bolsa.'},
+  {c:'formas',q:'¿Cual es el capital minimo de una SA?',a:'60.000 euros.\nAl constituirse hay que tener pagado al menos el 25%.'},
+  {c:'formas',q:'¿Que es una cooperativa?',a:'Una empresa formada por trabajadores que tambien son duenos.\nCada socio tiene un voto igual sin importar el capital que aporte.'},
+  {c:'formas',q:'¿Que es una sociedad laboral?',a:'Una SL o SA donde los trabajadores poseen al menos el 51% del capital.\nNingun socio trabajador puede tener mas del 33% el solo.'},
+  {c:'formas',q:'¿Que impuesto paga el empresario individual?',a:'El IRPF\n(Impuesto sobre la Renta de las Personas Fisicas).'},
+  {c:'formas',q:'¿Que impuesto pagan una SL o SA?',a:'El IS\n(Impuesto de Sociedades).'},
+  {c:'formas',q:'¿Cual es la diferencia entre acciones y participaciones?',a:'Acciones (SA): se venden libremente, pueden cotizar en bolsa.\nParticipaciones (SL): necesitan permiso de los socios y no cotizan en bolsa.'},
+  {c:'formas',q:'¿Que organos de gobierno tiene una SL?',a:'· Junta General de Socios (obligatoria si hay mas de 15 socios)\n· Administrador o administradores\n· Opcionalmente: Consejo de Administracion (3-12 consejeros)'},
+  {c:'impuestos',q:'¿Que es el IRPF y quien lo paga?',a:'El Impuesto sobre la Renta de las Personas Fisicas.\nLo pagan trabajadores y autonomos.\nEs progresivo: a mas ganas, mas pagas.'},
+  {c:'impuestos',q:'¿Que significa que el IRPF es progresivo?',a:'Que el porcentaje sube segun cuanto ganas.\nEjemplo: hasta 12.450 euros → 19%\nPor mas de 300.000 euros → 47%'},
+  {c:'impuestos',q:'¿Cuales son los 3 metodos de calculo del IRPF para autonomos?',a:'1. Estimacion directa normal (ventas +600.000 euros)\n2. Estimacion directa simplificada (ventas -600.000 euros)\n3. Estimacion objetiva o modulos (negocios pequenos, pago fijo)'},
+  {c:'impuestos',q:'¿Que son los pagos fraccionados del IRPF?',a:'Adelantos que el autonomo paga cada trimestre a Hacienda.\nSon el 20% del beneficio acumulado.\nDespues se ajustan en la declaracion anual de junio.'},
+  {c:'impuestos',q:'¿Cuales son las fechas de los pagos fraccionados del IRPF?',a:'20 de abril\n20 de julio\n20 de octubre\n30 de enero'},
+  {c:'impuestos',q:'¿Que retencion se aplica a un profesional autonomo?',a:'15% de su factura.\nSi es su primer ano de actividad (y los dos siguientes): solo el 7%.'},
+  {c:'impuestos',q:'¿Que retencion se aplica al alquiler de un local?',a:'19% del importe del alquiler.\nLa empresa lo ingresa directamente en Hacienda.'},
+  {c:'impuestos',q:'¿Que es el IS y quien lo paga?',a:'El Impuesto de Sociedades.\nLo pagan las sociedades (SL, SA, cooperativas...).\nEl porcentaje es fijo, no sube con los beneficios.'},
+  {c:'impuestos',q:'¿Que porcentajes tiene el IS?',a:'15% → los 2 primeros anos con beneficios\n20% → empresas con ventas menores de 1 millon de euros\n25% → el resto de empresas'},
+  {c:'impuestos',q:'¿Cuando se presentan los pagos del IS?',a:'3 pagos fraccionados:\n20 abril · 20 octubre · 20 diciembre\nDeclaracion anual: mes de julio'},
+  {c:'impuestos',q:'¿Que es el IVA?',a:'Un impuesto sobre el consumo, no sobre los beneficios.\nLa empresa lo cobra a sus clientes y luego lo entrega a Hacienda.'},
+  {c:'impuestos',q:'¿Cuales son los tipos de IVA?',a:'4% (superreducido): alimentos basicos, libros, medicamentos\n10% (reducido): resto alimentos, bares, transporte\n21% (general): todo lo demas'},
+  {c:'impuestos',q:'¿Como se calcula el IVA a pagar cada trimestre?',a:'IVA cobrado a clientes (repercutido)\nMENOS\nIVA pagado en compras (soportado)\n= Lo que se ingresa en Hacienda'},
+  {c:'autonomos',q:'¿Es lo mismo autonomo que empresario individual?',a:'NO. El autonomo es un concepto mas amplio.\nEjemplo: el gerente de una SL tambien es autonomo aunque no sea empresario individual.'},
+  {c:'autonomos',q:'¿Como cotiza un autonomo desde 2023?',a:'Segun sus ingresos reales.\nEstima lo que va a ganar, se ubica en un tramo y paga una cuota mensual.\nAl ano siguiente Hacienda lo revisa y ajusta.'},
+  {c:'autonomos',q:'¿Cuanto paga un autonomo nuevo en 2025?',a:'80 euros al mes el primer ano (tarifa plana).\nSe puede ampliar al segundo ano si gana menos del SMI.'},
+  {c:'autonomos',q:'¿Que es el PAE y para que sirve?',a:'Punto de Atencion al Emprendedor.\nSon oficinas que ayudan a crear empresas.\nEl emprendedor rellena un formulario y el PAE hace todos los tramites.'},
+];
+
+const CLABELS={formas:'Formas juridicas',impuestos:'Impuestos',autonomos:'Autonomos y PAE'};
+const DTITLES={all:'Todas las tarjetas',formas:'Formas juridicas',impuestos:'Impuestos',autonomos:'Autonomos y PAE'};
+
+let deck=[],idx=0,flipped=false,rightSet=new Set(),wrongSet=new Set(),cf='all';
+
+function shuffle(a){return [...a].sort(()=>Math.random()-.5);}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
+function goHome(){show('s-home');}
+
+function start(filter,wrongOnly){
+  cf=filter;
+  let src;
+  if(wrongOnly) src=CARDS.filter((_,i)=>wrongSet.has(i));
+  else if(filter==='all') src=[...CARDS];
+  else src=CARDS.filter(c=>c.c===filter);
+  deck=shuffle(src).map((c,i)=>({...c,oi:CARDS.indexOf(c)}));
+  idx=0;flipped=false;rightSet.clear();wrongSet.clear();
+  document.getElementById('htitle').textContent=wrongOnly?'Solo las falladas':DTITLES[filter];
+  show('s-study');
+  render();
+}
+
+function render(){
+  if(idx>=deck.length){done();return;}
+  const cd=deck[idx];
+  flipped=false;
+  const el=document.getElementById('card');
+  el.className='card '+cd.c;
+  document.getElementById('ccat').textContent=CLABELS[cd.c];
+  document.getElementById('cnum').textContent='#'+(cd.oi+1);
+  document.getElementById('cside').textContent='Pregunta';
+  const t=document.getElementById('ctext');
+  t.className='ctext';t.textContent=cd.q;
+  document.getElementById('chint').style.display='block';
+  document.getElementById('actions').className='actions hidden';
+  upd();
+}
+
+function flip(){
+  if(flipped)return;
+  flipped=true;
+  const cd=deck[idx];
+  document.getElementById('cside').textContent='Respuesta';
+  const t=document.getElementById('ctext');
+  t.className='cans';t.textContent=cd.a;
+  document.getElementById('chint').style.display='none';
+  document.getElementById('actions').className='actions';
+}
+
+function mark(ok){
+  const oi=deck[idx].oi;
+  if(ok)rightSet.add(oi);else wrongSet.add(oi);
+  idx++;render();
+}
+function skip(){idx++;render();}
+
+function upd(){
+  const total=deck.length;
+  document.getElementById('hprog').textContent='Tarjeta '+(Math.min(idx+1,total))+' de '+total;
+  document.getElementById('pr').textContent=rightSet.size;
+  document.getElementById('pw').textContent=wrongSet.size;
+  document.getElementById('pf').style.width=(total?Math.round(idx/total*100):0)+'%';
+}
+
+function done(){
+  const total=rightSet.size+wrongSet.size;
+  const pct=total?Math.round(rightSet.size/total*100):0;
+  document.getElementById('sr').textContent=rightSet.size;
+  document.getElementById('sw').textContent=wrongSet.size;
+  document.getElementById('sp').textContent=pct+'%';
+  const ic=document.getElementById('dicon');
+  let title,msg;
+  if(pct>=85){ic.style.cssText='width:68px;height:68px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.8rem;background:#EAF3DE;color:#27500A;';ic.innerHTML='✓';title='Excelente!';msg='Dominas este bloque. Sigue asi de bien!';}
+  else if(pct>=55){ic.style.cssText='width:68px;height:68px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.8rem;background:#FAEEDA;color:#854F0B;';ic.innerHTML='★';title='Buen progreso!';msg='Vas bien. Repasa las que fallaste y vuelve a intentarlo.';}
+  else{ic.style.cssText='width:68px;height:68px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.8rem;background:#FCEBEB;color:#A32D2D;';ic.innerHTML='↺';title='Sigue practicando';msg='Poco a poco se queda todo. Repasa las tarjetas dificiles cada dia.';}
+  document.getElementById('dtitle').textContent=title;
+  document.getElementById('dmsg').textContent=msg;
+  document.getElementById('bwo').style.display=wrongSet.size>0?'block':'none';
+  show('s-done');
+}
+
+function restart(wrongOnly){start(cf,wrongOnly);}
+</script>
+</body>
+</html>
